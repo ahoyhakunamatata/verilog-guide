@@ -1,6 +1,6 @@
 site_name: Verilog HDL 语法指南
 site_description: IEEE 1364-2005 Verilog 语法指南（中文单语，全部示例经 Icarus Verilog 编译仿真验证）
-site_url: ""
+site_url: https://ahoyhakunamatata.github.io/verilog-guide/
 docs_dir: docs
 site_dir: site
 strict: true                    # 任何警告（失效 snippet、断链、nav 缺失）→ 构建失败

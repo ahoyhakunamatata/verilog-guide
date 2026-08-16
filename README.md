@@ -28,6 +28,15 @@
 
 > ⚠️ **禁止双击 `site/index.html` 浏览**：`file://` 协议下搜索被浏览器 CORS 拦截。必须用 `serve.py`（或 `python -m http.server -d site`）。
 
+## 发布（GitHub Pages）
+
+推送 `main` 即自动构建发布（`.github/workflows/pages.yml`），线上地址：
+
+https://ahoyhakunamatata.github.io/verilog-guide/
+
+- 首次发布：仓库 Settings → Pages → Source 选 **GitHub Actions**，然后到 Actions 页重跑一次失败的 workflow（或再推一次提交）
+- 发布前本地把关：`tools/check.py` 全绿再推送（CI 只构建，示例验证依赖本机 iverilog 工具链）
+
 ## 写作约定（新增/修改示例必读）
 
 ### 示例源真机制

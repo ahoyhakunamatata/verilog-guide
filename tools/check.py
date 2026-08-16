@@ -4,7 +4,7 @@
 流程：
 1. verify_examples.py —— 全部示例编译+仿真+一致性检查
 2. mkdocs build --strict —— 任何警告（失效 snippet、断链）即失败
-3. 外链审计 —— site/ 内出现 http(s):// 引用即 FAIL（硬性禁 CDN）
+3. 外链审计 —— site/ 内出现外部"资源加载"（script/img 的 src、stylesheet 的 href）即 FAIL；canonical/og:url 等元数据链接放行
 4. 搜索索引检查 —— site/search/search_index.json 必须存在（本地 lunr.js）
 
 用法：
@@ -18,7 +18,18 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = PROJECT_ROOT / "site"
-EXTERNAL_RE = re.compile(r"""(?:src|href)\s*=\s*["']https?://""", re.IGNORECASE)
+# 外链审计只针对"浏览器会实际发起的资源加载"：script/img/iframe 等的 src，
+# 以及 link rel=stylesheet 的 href（属性顺序两种都要覆盖）。
+# canonical/og:url 等元数据链接不是资源请求，放行。
+EXTERNAL_SRC_RE = re.compile(
+    r"""<(?:script|img|iframe|source|video|audio)\b[^>]*\bsrc=["']https?://""",
+    re.IGNORECASE,
+)
+EXTERNAL_STYLESHEET_RE = re.compile(
+    r"""<link\b[^>]*(?:(?:href=["']https?://[^"']*["'][^>]*rel=["']stylesheet["'])
+            |(?:rel=["']stylesheet["'][^>]*href=["']https?://[^"']*["']))""",
+    re.IGNORECASE | re.VERBOSE,
+)
 
 
 def run(cmd, cwd=PROJECT_ROOT, timeout=600):
@@ -31,8 +42,9 @@ def audit_site():
     html_files = sorted(SITE_DIR.rglob("*.html"))
     for h in html_files:
         text = h.read_text(encoding="utf-8", errors="replace")
-        for m in EXTERNAL_RE.finditer(text):
-            errors.append("%s: %s" % (h.relative_to(PROJECT_ROOT), m.group(0)))
+        for pattern in (EXTERNAL_SRC_RE, EXTERNAL_STYLESHEET_RE):
+            for m in pattern.finditer(text):
+                errors.append("%s: %s" % (h.relative_to(PROJECT_ROOT), m.group(0)[:80]))
     if not (SITE_DIR / "search" / "search_index.json").exists():
         errors.append("site/search/search_index.json missing (local search broken)")
     return errors
