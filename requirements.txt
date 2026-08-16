@@ -1,0 +1,6 @@
+# Pinned versions (ASCII only - pip reads this file with cp936 on this system).
+# Upgrade deliberately, only while online, then rerun check.py.
+mkdocs==1.6.1
+mkdocs-material==9.7.7
+pymdown-extensions==11.0.1
+pygments==2.20.0

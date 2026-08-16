@@ -1,0 +1,10 @@
+site/
+build/
+.venv/
+wheels/
+__pycache__/
+*.pyc
+# 示例运行时产生的仿真工件（TB 相对 cwd 写文件）
+*.vcd
+examples/**/strobe_capture.txt
+examples/**/io_test.txt

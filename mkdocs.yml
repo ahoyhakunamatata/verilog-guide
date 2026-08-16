@@ -1,0 +1,87 @@
+site_name: Verilog HDL 语法指南
+site_description: IEEE 1364-2005 Verilog 语法指南（中文单语，全部示例经 Icarus Verilog 编译仿真验证）
+site_url: ""
+docs_dir: docs
+site_dir: site
+strict: true                    # 任何警告（失效 snippet、断链、nav 缺失）→ 构建失败
+use_directory_urls: true
+
+theme:
+  name: material
+  language: zh
+  font: false                   # 关键：禁 Google Fonts（离线硬要求），中文回退系统字体
+  palette:                      # 暗色模式：跟随系统 + 手动切换
+    - media: "(prefers-color-scheme)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: 切换至暗色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: 切换至亮色模式
+  features:
+    - navigation.sections       # 左侧可折叠分组
+    - navigation.expand         # 默认展开全部分组
+    - navigation.top            # 回到顶部按钮
+    - navigation.footer         # 上一页/下一页翻页
+    - toc.follow                # 右侧 TOC 跟随滚动高亮
+    - content.code.copy         # 代码块复制按钮
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search:
+      lang: zh                  # 本地 lunr.js（随 mkdocs 打包，无 CDN）
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.highlight:         # Pygments verilog lexer
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path: [.]            # 相对项目根（mkdocs 调用处），引用写 examples/...
+      check_paths: true         # 失效引用 → 构建失败（防漂移第二道锁）
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+
+extra:
+  generator: false
+
+nav:
+  - 首页: index.md
+  - 语言基础:
+      - 01 词法约定: 01-lexical.md
+      - 02 数据类型: 02-data-types.md
+      - 03 表达式与操作符: 03-operators.md
+      - 04 模块与层次结构: 04-modules.md
+      - 05 过程语句: 05-procedural.md
+      - 06 赋值语义与事件调度: 06-assignments.md
+  - 电路设计实践:
+      - 07 组合逻辑典型电路与推荐写法: 07-combinational.md
+      - 08 时序逻辑典型电路与推荐写法: 08-sequential.md
+      - 09 有限状态机: 09-fsm.md
+  - 高级语言特性:
+      - 10 任务与函数: 10-tasks-functions.md
+      - 11 参数化与 generate: 11-params-generate.md
+      - 12 编译指令与宏: 12-directives.md
+      - 13 系统任务与函数: 13-system-tasks.md
+      - 14 不可综合语法专章: 14-non-synthesizable.md
+  - 验证与工程规范:
+      - 15 测试平台编写基础: 15-testbenches.md
+      - 16 命名规范: 16-naming-conventions.md
+      - 17 可综合性检查清单: 17-synthesizability-checklist.md
+  - 附录:
+      - 18 参考标准: 18-appendix-standards.md
